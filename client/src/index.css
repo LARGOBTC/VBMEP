@@ -31,6 +31,9 @@
   --purple: 270 60% 54%;  /* Default primary color */
   --purple-light: 260 75% 67%;
   --gold: 51 100% 50%;
+  
+  /* Exact colors */
+  --exact-dark-purple: #1e1033;
 }
 
 .dark {
