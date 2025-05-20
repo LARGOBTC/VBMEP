@@ -291,4 +291,212 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+import { db } from './db';
+import { eq, and, desc, sql } from 'drizzle-orm';
+
+export class DatabaseStorage implements IStorage {
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user;
+  }
+
+  async getUserByWalletAddress(walletAddress: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.walletAddress, walletAddress));
+    return user;
+  }
+
+  async isAdmin(walletAddress: string): Promise<boolean> {
+    const user = await this.getUserByWalletAddress(walletAddress);
+    return !!user && user.isAdmin === true;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db.insert(users).values(insertUser).returning();
+    return user;
+  }
+
+  async getAllEvents(): Promise<Event[]> {
+    return db.select().from(events);
+  }
+
+  async getEvent(id: number): Promise<Event | undefined> {
+    const [event] = await db.select().from(events).where(eq(events.id, id));
+    return event;
+  }
+
+  async getActiveEvent(): Promise<Event | undefined> {
+    const [event] = await db.select().from(events).where(eq(events.isActive, true));
+    return event;
+  }
+
+  async createEvent(insertEvent: InsertEvent): Promise<Event> {
+    const [event] = await db.insert(events).values(insertEvent).returning();
+    return event;
+  }
+
+  async declareWinner(eventId: number, winner: string): Promise<Event> {
+    // 1. Get the event
+    const event = await this.getEvent(eventId);
+    if (!event) {
+      throw new Error("Event not found");
+    }
+
+    // 2. Update the event
+    const [updatedEvent] = await db
+      .update(events)
+      .set({
+        winner,
+        isActive: false
+      })
+      .where(eq(events.id, eventId))
+      .returning();
+
+    // 3. Get all bets for this event
+    const allBets = await this.getEventBets(eventId);
+    
+    // 4. Process all bets (calc winnings)
+    for (const bet of allBets) {
+      const winning = bet.team === winner ? 
+        parseFloat(bet.amount.toString()) * 2 : // Simple 2x payout for winners
+        0;
+      
+      // Update the bet
+      await db
+        .update(bets)
+        .set({
+          processed: true,
+          winnings: winning.toString()
+        })
+        .where(eq(bets.id, bet.id));
+    }
+
+    return updatedEvent;
+  }
+
+  async placeBet(insertBet: InsertBet): Promise<Bet> {
+    const [bet] = await db
+      .insert(bets)
+      .values({
+        ...insertBet,
+        processed: false,
+        winnings: null
+      })
+      .returning();
+    return bet;
+  }
+
+  async getUserBets(walletAddress: string): Promise<UserBet[]> {
+    // Get all bets for this wallet address
+    const userBets = await db
+      .select()
+      .from(bets)
+      .where(eq(bets.walletAddress, walletAddress));
+
+    // Enrich with event data
+    const enrichedBets = await Promise.all(userBets.map(async (bet) => {
+      const event = await this.getEvent(bet.eventId);
+      if (!event) {
+        throw new Error("Event not found");
+      }
+
+      // Determine team name
+      const teamName = bet.team === "team1" ? event.team1Name : event.team2Name;
+      
+      // Calculate potential winnings
+      const odds = bet.team === "team1" ? 1.95 : 1.92; // Sample odds
+      const potentialWin = parseFloat(bet.amount.toString()) * odds;
+
+      // Determine bet status
+      let status: "in_progress" | "won" | "lost" = "in_progress";
+      if (event.winner) {
+        status = event.winner === bet.team ? "won" : "lost";
+      }
+
+      return {
+        id: bet.id,
+        eventTitle: event.title,
+        eventDescription: event.description || "",
+        team: bet.team,
+        teamName,
+        amount: parseFloat(bet.amount.toString()),
+        potentialWin,
+        status,
+      };
+    }));
+
+    return enrichedBets;
+  }
+
+  async getEventBets(eventId: number): Promise<Bet[]> {
+    return db
+      .select()
+      .from(bets)
+      .where(eq(bets.eventId, eventId));
+  }
+
+  async getEventStats(eventId: number): Promise<any> {
+    const event = await this.getEvent(eventId);
+    if (!event) {
+      throw new Error("Event not found");
+    }
+
+    // Get all bets for this event
+    const eventBets = await this.getEventBets(eventId);
+
+    // Calculate statistics
+    const team1Bets = eventBets.filter((bet) => bet.team === "team1");
+    const team2Bets = eventBets.filter((bet) => bet.team === "team2");
+
+    const team1Total = team1Bets.reduce((sum, bet) => sum + parseFloat(bet.amount.toString()), 0);
+    const team2Total = team2Bets.reduce((sum, bet) => sum + parseFloat(bet.amount.toString()), 0);
+    const totalPool = team1Total + team2Total;
+
+    // Calculate percentages
+    const team1Percentage = totalPool === 0 ? 50 : Math.round((team1Total / totalPool) * 100);
+    const team2Percentage = totalPool === 0 ? 50 : 100 - team1Percentage;
+
+    // Calculate odds (simplified)
+    const team1Odds = team2Total === 0 ? 1.95 : (totalPool / team1Total) * 0.95;
+    const team2Odds = team1Total === 0 ? 1.92 : (totalPool / team2Total) * 0.95;
+
+    // Format recent bets
+    const formatRecentBets = (bets: Bet[]): BetData[] => {
+      return bets
+        .sort((a, b) => {
+          const aTime = a.createdAt ? a.createdAt.getTime() : 0;
+          const bTime = b.createdAt ? b.createdAt.getTime() : 0;
+          return bTime - aTime;
+        })
+        .slice(0, 5)
+        .map((bet) => ({
+          walletAddress: bet.walletAddress,
+          amount: parseFloat(bet.amount.toString()),
+          timestamp: bet.createdAt ? 
+            bet.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 
+            new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        }));
+    };
+
+    return {
+      team1Total,
+      team2Total,
+      team1Bettors: team1Bets.length,
+      team2Bettors: team2Bets.length,
+      team1Percentage,
+      team2Percentage,
+      totalPool,
+      team1Odds: parseFloat(team1Odds.toFixed(2)),
+      team2Odds: parseFloat(team2Odds.toFixed(2)),
+      team1RecentBets: formatRecentBets(team1Bets),
+      team2RecentBets: formatRecentBets(team2Bets),
+    };
+  }
+}
+
+// Initialize database storage
+export const storage = new DatabaseStorage();
