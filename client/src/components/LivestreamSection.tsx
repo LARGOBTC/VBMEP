@@ -192,7 +192,7 @@ const LivestreamSection: React.FC<LivestreamSectionProps> = ({
           </div>
           <div className="text-right">
             <div className="text-xs text-gray-500">Total Pool</div>
-            <div className="font-oswald font-bold text-xl text-purple">{totalPool.toFixed(2)} ETH</div>
+            <div className="font-oswald font-bold text-xl text-purple">{totalPool.toFixed(2)} PLS</div>
           </div>
         </div>
       </div>

@@ -67,7 +67,7 @@ const Home = () => {
       await placeBet(event.id, team, amount);
       toast({
         title: "Bet Placed",
-        description: `Successfully placed ${amount} ETH on ${team === "team1" ? event.team1Name : event.team2Name}`,
+        description: `Successfully placed ${amount} PLS on ${team === "team1" ? event.team1Name : event.team2Name}`,
       });
     } catch (error) {
       toast({
@@ -147,9 +147,9 @@ const Home = () => {
                     </div>
                   </div>
                   <div className="flex justify-between text-xs text-gray-600">
-                    <span>{eventData?.team1Total || 0} ETH</span>
-                    <span className="text-center">Total Pool: <span className="font-bold">{eventData?.totalPool || 0} ETH</span></span>
-                    <span>{eventData?.team2Total || 0} ETH</span>
+                    <span>{eventData?.team1Total || 0} PLS</span>
+                    <span className="text-center">Total Pool: <span className="font-bold">{eventData?.totalPool || 0} PLS</span></span>
+                    <span>{eventData?.team2Total || 0} PLS</span>
                   </div>
                 </div>
               </div>

@@ -130,10 +130,10 @@ const UserBets: React.FC<UserBetsProps> = ({
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">{bet.amount.toFixed(2)} ETH</div>
+                        <div className="text-sm font-medium text-gray-900">{bet.amount.toFixed(2)} PLS</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-green-600">{bet.potentialWin.toFixed(2)} ETH</div>
+                        <div className="text-sm font-medium text-green-600">{bet.potentialWin.toFixed(2)} PLS</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadge(bet.status)}`}>

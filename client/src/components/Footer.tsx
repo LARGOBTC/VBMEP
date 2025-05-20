@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
               <span className="text-gold">Vegas</span><span className="text-white">Bets</span>
             </h3>
             <p className="text-gray-300 mb-4">
-              The premier blockchain-based betting platform for live events.
+              The premier PulseChain-based betting platform for jiu-jitsu and MMA matches.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-300 hover:text-white">

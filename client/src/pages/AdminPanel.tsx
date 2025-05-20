@@ -218,7 +218,7 @@ const AdminPanel: React.FC = () => {
                               <div className="mt-4 md:mt-0 text-right">
                                 <div className="text-sm text-gray-600">Total Pool</div>
                                 <div className="text-lg font-bold text-purple">
-                                  {event.totalPool ? event.totalPool.toFixed(2) : "0.00"} ETH
+                                  {event.totalPool ? event.totalPool.toFixed(2) : "0.00"} PLS
                                 </div>
                               </div>
                             </div>
