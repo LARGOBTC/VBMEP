@@ -25,8 +25,8 @@ const WalletModal: React.FC<WalletModalProps> = ({
         
         <div className="text-center py-4">
           <img 
-            src="https://images.unsplash.com/photo-1621504450181-5d356f61d307?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&h=200" 
-            alt="Cryptocurrency wallet" 
+            src="https://images.unsplash.com/photo-1555597673-b21d5c935865?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&h=200" 
+            alt="Jiu-jitsu match" 
             className="mx-auto h-32 w-auto object-contain mb-4"
           />
         </div>

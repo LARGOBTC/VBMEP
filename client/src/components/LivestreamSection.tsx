@@ -96,23 +96,23 @@ const LivestreamSection: React.FC<LivestreamSectionProps> = ({
     const initialChatMessages: ChatMessage[] = [
       {
         id: '1',
-        username: 'JohnD',
-        avatar: 'JD',
-        message: `${team1Name} is looking strong today!`,
+        username: 'JiuJitsuFan',
+        avatar: 'JF',
+        message: `${team1Name}'s guard passing technique is incredible today!`,
         timestamp: '2:34 PM',
       },
       {
         id: '2',
-        username: 'CryptoTrader',
-        avatar: 'CT',
-        message: `I just placed 0.5 ETH on ${team2Name} 🚀`,
+        username: 'PulseChainTrader',
+        avatar: 'PT',
+        message: `I just placed 0.5 PLS on ${team2Name}'s submission skills 🚀`,
         timestamp: '2:35 PM',
       },
       {
         id: '3',
-        username: 'BetWinner',
-        avatar: 'BW',
-        message: `The odds are shifting toward ${team1Name} now`,
+        username: 'MMAExpert',
+        avatar: 'ME',
+        message: `The odds are shifting toward ${team1Name}'s ground game now`,
         timestamp: '2:36 PM',
       },
     ];

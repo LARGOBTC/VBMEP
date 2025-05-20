@@ -67,8 +67,8 @@ const UserBets: React.FC<UserBetsProps> = ({
         <div className="py-12 text-center">
           <div className="mb-4">
             <img 
-              src="https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&h=200" 
-              alt="Cryptocurrency wallet" 
+              src="https://images.unsplash.com/photo-1587740896339-96a76170508d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&h=200" 
+              alt="Jiu-jitsu match" 
               className="inline-block h-32 w-auto object-contain"
             />
           </div>

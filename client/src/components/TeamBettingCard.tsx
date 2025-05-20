@@ -30,10 +30,10 @@ const TeamBettingCard: React.FC<TeamBettingCardProps> = ({
   const [sliderValue, setSliderValue] = useState<number>(0.1);
   const { isConnected, balance } = useWallet();
 
-  // Image URLs for backgrounds
+  // Image URLs for backgrounds - jiu-jitsu fighters
   const bgImageUrl = team === "team1" 
-    ? "https://images.unsplash.com/photo-1518530483301-a34aa3c5ef8e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1050&q=80"
-    : "https://images.unsplash.com/photo-1518458028785-8fbcd101ebb9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1050&q=80";
+    ? "https://images.unsplash.com/photo-1591117207239-788bf8de6c3b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1050&q=80"
+    : "https://images.unsplash.com/photo-1595878715977-f1a9ea7609ce?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1050&q=80";
 
   // Handle input change for manual bet amount input
   const handleBetAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
