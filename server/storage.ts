@@ -330,8 +330,13 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getActiveEvent(): Promise<Event | undefined> {
-    const [event] = await db.select().from(events).where(eq(events.isActive, true));
-    return event;
+    try {
+      const result = await db.select().from(events).where(eq(events.isActive, true));
+      return result[0];
+    } catch (error) {
+      console.error("Error fetching active event:", error);
+      return undefined;
+    }
   }
 
   async createEvent(insertEvent: InsertEvent): Promise<Event> {
