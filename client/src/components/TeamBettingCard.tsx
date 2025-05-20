@@ -30,10 +30,7 @@ const TeamBettingCard: React.FC<TeamBettingCardProps> = ({
   const [sliderValue, setSliderValue] = useState<number>(0.1);
   const { isConnected, balance } = useWallet();
 
-  // Image URLs for backgrounds - jiu-jitsu fighters
-  const bgImageUrl = team === "team1" 
-    ? "https://images.unsplash.com/photo-1591117207239-788bf8de6c3b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1050&q=80"
-    : "https://images.unsplash.com/photo-1595878715977-f1a9ea7609ce?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1050&q=80";
+  // No images as requested
 
   // Handle input change for manual bet amount input
   const handleBetAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,25 +72,15 @@ const TeamBettingCard: React.FC<TeamBettingCardProps> = ({
         </div>
       </div>
       
-      {/* Team image */}
-      <div className="relative overflow-hidden h-48">
-        <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-        <img 
-          src={bgImageUrl}
-          alt={`Team ${teamName}`} 
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className={`${team === "team1" ? "bg-purple" : "bg-purple-light"} bg-opacity-90 text-white text-2xl font-oswald font-bold px-4 py-2 rounded shadow-lg`}>
-            {teamName}
-          </span>
-        </div>
+      {/* Team Header */}
+      <div className={`${team === "team1" ? "bg-purple" : "bg-purple-light"} text-white p-8 flex items-center justify-center`}>
+        <h2 className="text-3xl font-oswald font-bold text-center">TEAM {teamName}</h2>
       </div>
       
       <div className="p-4">
         <div className="mb-4">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-gray-600 font-medium">Total Wagered</span>
+            <span className="text-purple-700 font-medium">Total Wagered</span>
             <span className={`font-oswald text-lg font-bold ${team === "team1" ? "text-purple" : "text-purple-light"}`}>
               {totalWagered.toFixed(2)} PLS
             </span>
@@ -155,7 +142,7 @@ const TeamBettingCard: React.FC<TeamBettingCardProps> = ({
         </form>
       </div>
       
-      <div className="bg-gray-100 p-4 border-t border-gray-200">
+      <div className="bg-purple-50 p-4 border-t border-purple-200">
         <h4 className="font-bold text-gray-700 mb-2">Recent Bets</h4>
         <div className="max-h-40 overflow-y-auto">
           {recentBets.length > 0 ? (
