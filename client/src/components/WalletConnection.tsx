@@ -45,7 +45,7 @@ const WalletConnection: React.FC<WalletConnectionProps> = ({
               {walletAddress ? formatWalletAddress(walletAddress) : ""}
             </div>
             <span className="bg-purple px-2 py-1 rounded text-xs font-bold">
-              <span>{balance !== undefined ? balance.toFixed(2) : "0.00"}</span> ETH
+              <span>{balance !== undefined ? balance.toFixed(2) : "0.00"}</span> PLS
             </span>
             <button 
               onClick={onDisconnectWallet}

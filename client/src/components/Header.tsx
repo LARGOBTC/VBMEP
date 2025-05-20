@@ -23,7 +23,10 @@ const Header: React.FC<HeaderProps> = ({
               <span className="text-gold">Vegas</span>
               <span className="text-white">Bets</span>
             </div>
-            <span className="hidden md:inline-block bg-purple-light text-white text-xs px-2 py-1 rounded">
+            <span className="hidden md:inline-block bg-purple-light text-white text-xs px-2 py-1 rounded ml-2">
+              JIU-JITSU & MMA
+            </span>
+            <span className="hidden md:inline-block bg-purple-light text-white text-xs px-2 py-1 rounded ml-2">
               LIVE
             </span>
           </div>

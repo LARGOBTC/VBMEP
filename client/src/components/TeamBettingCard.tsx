@@ -95,7 +95,7 @@ const TeamBettingCard: React.FC<TeamBettingCardProps> = ({
           <div className="flex justify-between items-center mb-2">
             <span className="text-gray-600 font-medium">Total Wagered</span>
             <span className={`font-oswald text-lg font-bold ${team === "team1" ? "text-purple" : "text-purple-light"}`}>
-              {totalWagered.toFixed(2)} ETH
+              {totalWagered.toFixed(2)} PLS
             </span>
           </div>
           <div className="flex justify-between items-center">
@@ -118,7 +118,7 @@ const TeamBettingCard: React.FC<TeamBettingCardProps> = ({
                 className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-full" 
                 placeholder="0.00"
               />
-              <span className="ml-2 text-gray-700 font-medium">ETH</span>
+              <span className="ml-2 text-gray-700 font-medium">PLS</span>
             </div>
             {isConnected && balance !== undefined && parseFloat(betAmount) > balance && (
               <p className="text-red-500 text-xs mt-1">Insufficient balance</p>
@@ -138,9 +138,9 @@ const TeamBettingCard: React.FC<TeamBettingCardProps> = ({
           </div>
           
           <div className="flex justify-between text-sm text-gray-600 mb-4">
-            <span>0.01 ETH</span>
-            <span>0.5 ETH</span>
-            <span>1 ETH</span>
+            <span>0.01 PLS</span>
+            <span>0.5 PLS</span>
+            <span>1 PLS</span>
           </div>
           
           <div className="flex justify-center">
@@ -169,7 +169,7 @@ const TeamBettingCard: React.FC<TeamBettingCardProps> = ({
                     <span className="text-gray-500 text-xs">{bet.timestamp}</span>
                   </div>
                   <span className={`font-oswald font-bold ${team === "team1" ? "text-purple" : "text-purple-light"}`}>
-                    {bet.amount.toFixed(2)} ETH
+                    {bet.amount.toFixed(2)} PLS
                   </span>
                 </div>
               </div>

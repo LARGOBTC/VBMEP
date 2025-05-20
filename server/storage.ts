@@ -72,11 +72,11 @@ export class MemStorage implements IStorage {
 
     // Create an active event
     this.createEvent({
-      title: "ALPHA vs OMEGA",
-      description: "Tournament Finals",
+      title: "Gordon Ryan vs Andre Galvao",
+      description: "ADCC Superfight Championship",
       youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      team1Name: "ALPHA",
-      team2Name: "OMEGA",
+      team1Name: "Ryan",
+      team2Name: "Galvao",
       isActive: true,
     });
   }
