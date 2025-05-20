@@ -15,7 +15,7 @@ const Header: React.FC<HeaderProps> = ({
   walletAddress,
 }) => {
   return (
-    <header className="bg-purple-dark text-white shadow-lg">
+    <header className="bg-purple text-white shadow-lg">
       <div className="container mx-auto px-4 py-3">
         <div className="flex flex-wrap items-center justify-between">
           <div className="flex items-center">
