@@ -1,0 +1,110 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+interface IERC20 {
+    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+    function transfer(address recipient, uint256 amount) external returns (bool);
+    function balanceOf(address account) external view returns (uint256);
+    function allowance(address owner, address spender) external view returns (uint256);
+}
+
+contract TeamBetting {
+    address public owner;
+    IERC20 public token;
+
+    enum Team { None, TeamA, TeamB }
+    enum EventStatus { NotStarted, Ongoing, Finished }
+
+    struct Bet {
+        uint256 amount;
+        Team team;
+        bool claimed;
+    }
+
+    struct Event {
+        uint256 id;
+        EventStatus status;
+        Team winner;
+        uint256 totalA;
+        uint256 totalB;
+        mapping(address => Bet) bets;
+    }
+
+    mapping(uint256 => Event) public events;
+
+    event BetPlaced(uint256 indexed eventId, address indexed user, Team team, uint256 amount);
+    event EventResolved(uint256 indexed eventId, Team winner);
+    event WinningsClaimed(uint256 indexed eventId, address indexed user, uint256 amount);
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not contract owner");
+        _;
+    }
+
+    modifier validTeam(uint8 team) {
+        require(team == 1 || team == 2, "Invalid team");
+        _;
+    }
+
+    constructor(address tokenAddress) {
+        owner = msg.sender;
+        token = IERC20(tokenAddress);
+    }
+
+    function placeBet(uint256 eventId, uint8 team, uint256 amount) external validTeam(team) {
+        Event storage e = events[eventId];
+
+        require(e.status == EventStatus.NotStarted || e.status == EventStatus.Ongoing, "Betting closed");
+        require(amount > 0, "Amount must be > 0");
+        require(e.bets[msg.sender].amount == 0, "Already bet");
+
+        token.transferFrom(msg.sender, address(this), amount);
+
+        e.status = EventStatus.Ongoing;
+        e.bets[msg.sender] = Bet(amount, Team(team), false);
+
+        if (team == 1) e.totalA += amount;
+        else e.totalB += amount;
+
+        emit BetPlaced(eventId, msg.sender, Team(team), amount);
+    }
+
+    function resolveEvent(uint256 eventId, uint8 winningTeam) external onlyOwner validTeam(winningTeam) {
+        Event storage e = events[eventId];
+
+        require(e.status == EventStatus.Ongoing, "Event not active");
+
+        e.status = EventStatus.Finished;
+        e.winner = Team(winningTeam);
+
+        emit EventResolved(eventId, Team(winningTeam));
+    }
+
+    function claimWinnings(uint256 eventId) external {
+        Event storage e = events[eventId];
+        Bet storage b = e.bets[msg.sender];
+
+        require(e.status == EventStatus.Finished, "Event not finished");
+        require(b.amount > 0, "No bet found");
+        require(!b.claimed, "Already claimed");
+        require(b.team == e.winner, "Not on winning team");
+
+        uint256 rewardPool = e.totalA + e.totalB;
+        uint256 userShare = (b.amount * rewardPool) / (e.winner == Team.TeamA ? e.totalA : e.totalB);
+
+        b.claimed = true;
+        token.transfer(msg.sender, userShare);
+
+        emit WinningsClaimed(eventId, msg.sender, userShare);
+    }
+
+    function getUserBet(uint256 eventId, address user) external view returns (uint256 amount, Team team, bool claimed) {
+        Bet storage b = events[eventId].bets[user];
+        return (b.amount, b.team, b.claimed);
+    }
+
+    function getEventTotals(uint256 eventId) external view returns (uint256 totalA, uint256 totalB, EventStatus status, Team winner) {
+        Event storage e = events[eventId];
+        return (e.totalA, e.totalB, e.status, e.winner);
+    }
+}
